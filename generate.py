@@ -12,9 +12,11 @@ from google import genai
 from google.genai import types
 
 # ── Config ────────────────────────────────────────────────────────────────────
-NEWS_API_KEY  = os.getenv("NEWS_API_KEY",  "bb47c7769d264e79b455ddc239c5f4e4")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyC8PmFK04Lqm7_WMmBgshoqooggzt5lcJc")
-OUTPUT_DIR    = os.path.join("site", "content", "posts")
+NEWS_API_KEY = os.getenv("NEWS_API_KEY", "bb47c7769d264e79b455ddc239c5f4e4")
+OUTPUT_DIR   = os.path.join("site", "content", "posts")
+
+# Pool of Gemini keys — add more as needed, script rotates on quota exhaustion
+GEMINI_KEYS = [k.strip() for k in os.getenv("GEMINI_API_KEYS", "AIzaSyC8PmFK04Lqm7_WMmBgshoqooggzt5lcJc").split(",") if k.strip()]
 
 CATEGORIES = ["gaming", "virtual reality", "augmented reality", "tech hardware", "AI gaming"]
 
@@ -42,9 +44,11 @@ def fetch_top_story():
 
 # ── Gemini: generate full article ─────────────────────────────────────────────
 def generate_article(story: dict) -> str:
-    client = genai.Client(api_key=GEMINI_API_KEY)
-
-    prompt = f"""
+    last_error = None
+    for key in GEMINI_KEYS:
+        try:
+            client = genai.Client(api_key=key)
+            prompt = f"""
 You are a senior tech journalist writing for TechPulse, a high-end professional website
 covering Gaming, AR, VR, and Technology. Your audience is enthusiast gamers and tech professionals.
 
@@ -99,10 +103,15 @@ tags: ["tag1", "tag2", "tag3", "tag4"]
 """
 
     response = client.models.generate_content(
-        model="gemini-2.0-flash",
-        contents=prompt
-    )
-    return response.text.strip()
+                model="gemini-2.0-flash",
+                contents=prompt
+            )
+            print(f"[TechPulse] Gemini responded successfully.")
+            return response.text.strip()
+        except Exception as e:
+            print(f"[TechPulse] Key failed ({str(e)[:80]}), trying next...")
+            last_error = e
+    raise RuntimeError(f"All Gemini keys exhausted. Last error: {last_error}")
 
 # ── Save as Hugo Markdown file ─────────────────────────────────────────────────
 def save_article(content: str):

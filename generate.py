@@ -44,65 +44,37 @@ def fetch_top_story():
 
 # ── Gemini: generate full article ─────────────────────────────────────────────
 def generate_article(story: dict) -> str:
+    prompt = (
+        "You are a senior tech journalist writing for TechPulse, a high-end professional website\n"
+        "covering Gaming, AR, VR, and Technology. Your audience is enthusiast gamers and tech professionals.\n\n"
+        "Write a complete, SEO-optimized article based on the following news story.\n\n"
+        f"NEWS TITLE: {story['title']}\n"
+        f"NEWS DESCRIPTION: {story.get('description', '')}\n"
+        f"SOURCE: {story.get('source', {}).get('name', 'Unknown')}\n\n"
+        "STRICT OUTPUT FORMAT — return ONLY the following Markdown, nothing else:\n\n"
+        "---\n"
+        'title: "[Compelling SEO title here]"\n'
+        f"date: {datetime.date.today().isoformat()}\n"
+        'description: "[One-sentence meta description, max 155 chars]"\n'
+        'categories: ["[Primary: Gaming OR AR/VR OR Tech]"]\n'
+        'tags: ["tag1", "tag2", "tag3", "tag4"]\n'
+        "---\n\n"
+        "## TL;DR\n\n[2-3 sentence executive summary]\n\n"
+        "## Overview\n\n[2-3 paragraphs of professional analysis and context]\n\n"
+        "## Key Specifications / Details\n\n"
+        "| Specification | Detail |\n|---|---|\n"
+        "| [Spec 1] | [Value] |\n| [Spec 2] | [Value] |\n| [Spec 3] | [Value] |\n| [Spec 4] | [Value] |\n\n"
+        "## What This Means for Gamers / Tech Users\n\n[2 paragraphs on real-world impact]\n\n"
+        "## Industry Reaction\n\n[1-2 paragraphs on broader industry context]\n\n"
+        "## Our Take\n\n> [A sharp, opinionated 2-3 sentence editorial quote]\n\n"
+        "## Verdict\n\n[Final 1-2 paragraph conclusion with forward-looking insight]\n"
+    )
+
     last_error = None
     for key in GEMINI_KEYS:
         try:
             client = genai.Client(api_key=key)
-            prompt = f"""
-You are a senior tech journalist writing for TechPulse, a high-end professional website
-covering Gaming, AR, VR, and Technology. Your audience is enthusiast gamers and tech professionals.
-
-Write a complete, SEO-optimized article based on the following news story.
-
-NEWS TITLE: {story['title']}
-NEWS DESCRIPTION: {story.get('description', '')}
-SOURCE: {story.get('source', {}).get('name', 'Unknown')}
-
-STRICT OUTPUT FORMAT — return ONLY the following Markdown, nothing else:
-
----
-title: "[Compelling SEO title here]"
-date: {datetime.date.today().isoformat()}
-description: "[One-sentence meta description, max 155 chars]"
-categories: ["[Primary: Gaming OR AR/VR OR Tech]"]
-tags: ["tag1", "tag2", "tag3", "tag4"]
----
-
-## TL;DR
-
-[2-3 sentence executive summary]
-
-## Overview
-
-[2-3 paragraphs of professional analysis and context]
-
-## Key Specifications / Details
-
-| Specification | Detail |
-|---|---|
-| [Spec 1] | [Value] |
-| [Spec 2] | [Value] |
-| [Spec 3] | [Value] |
-| [Spec 4] | [Value] |
-
-## What This Means for Gamers / Tech Users
-
-[2 paragraphs on real-world impact]
-
-## Industry Reaction
-
-[1-2 paragraphs on broader industry context]
-
-## Our Take
-
-> [A sharp, opinionated 2-3 sentence editorial quote]
-
-## Verdict
-
-[Final 1-2 paragraph conclusion with forward-looking insight]
-"""
-
-    response = client.models.generate_content(
+            response = client.models.generate_content(
                 model="gemini-2.0-flash",
                 contents=prompt
             )

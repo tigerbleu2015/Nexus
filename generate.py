@@ -13,7 +13,7 @@ from google.genai import types
 
 # ── Config ────────────────────────────────────────────────────────────────────
 NEWS_API_KEY  = os.getenv("NEWS_API_KEY",  "bb47c7769d264e79b455ddc239c5f4e4")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyCqO1nRj9jcrIMmBKSpVkgJ83mgLzpS1RU")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyDnu8bprmQ-6Pcx8FgHCrPe3VS57LTRDBU")
 OUTPUT_DIR    = os.path.join("site", "content", "posts")
 
 CATEGORIES = ["gaming", "virtual reality", "augmented reality", "tech hardware", "AI gaming"]

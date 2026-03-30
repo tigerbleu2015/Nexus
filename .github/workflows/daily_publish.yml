@@ -2,8 +2,8 @@ name: Daily Article Publisher
 
 on:
   schedule:
-    - cron: '0 9 * * *'   # 9:00 AM UTC every day
-  workflow_dispatch:        # Allow manual trigger from GitHub UI
+    - cron: '0 9 * * *'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -37,17 +37,10 @@ jobs:
           extended: true
 
       - name: Build Hugo site
-        run: hugo --source site --destination ../public --minify
-
-      - name: Commit new article
-        run: |
-          git config user.name "TechPulse Bot"
-          git config user.email "bot@techpulse.ai"
-          git add site/content/posts/
-          git diff --staged --quiet || git commit -m "feat: auto-publish article $(date +%Y-%m-%d)"
+        run: hugo --source site --destination public --minify
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+          publish_dir: ./site/public

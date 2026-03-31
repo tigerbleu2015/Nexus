@@ -4,36 +4,76 @@ title: Home
 paginate: 9
 ---
 
-<section class="hero">
+<section class="hero-section">
   <div class="hero-glow" aria-hidden="true"></div>
-  <div class="hero-content">
-    <span class="hero-badge">AI-Powered · Updated Daily</span>
-    <h1>Your Daily Dose of<br><span class="gradient-text">Gaming & Tech News</span></h1>
-    <p>Covering Gaming, AR, VR and the technology shaping tomorrow.</p>
-    <a href="#articles" class="btn-primary">Read Latest</a>
+  <div class="hero-content container">
+    <div class="hero-text">
+      <span class="hero-badge">AI-Powered · Updated Daily</span>
+      <h1>The Future of<br><span class="gradient-text">Gaming & Tech News</span></h1>
+      <p>In-depth coverage of Gaming, Augmented Reality, Virtual Reality and the technology shaping tomorrow — delivered every morning.</p>
+      <div class="hero-actions">
+        <a href="#latest" class="btn-primary">Latest Articles</a>
+        <div class="hero-stats">
+          <span><strong>Daily</strong> Updates</span>
+          <span class="stat-sep">·</span>
+          <span><strong>AI</strong> Written</span>
+          <span class="stat-sep">·</span>
+          <span><strong>Free</strong> Forever</span>
+        </div>
+      </div>
+    </div>
+    {% assign featured = site.posts.first %}
+    {% if featured %}
+    <a href="{{ featured.url | relative_url }}" class="hero-featured" aria-label="Featured: {{ featured.title }}">
+      {% if featured.image %}
+      <div class="hero-img-wrap">
+        <img src="{{ featured.image }}" alt="{{ featured.title }}" loading="eager" />
+        <div class="hero-img-overlay" aria-hidden="true"></div>
+      </div>
+      {% endif %}
+      <div class="hero-card-body">
+        {% if featured.categories %}<span class="cat-badge cat-{{ featured.categories[0] | slugify }}">{{ featured.categories[0] }}</span>{% endif %}
+        <h2>{{ featured.title }}</h2>
+        <p>{{ featured.description | default: featured.excerpt | strip_html | truncate: 100 }}</p>
+        <span class="hero-read">Read Article →</span>
+      </div>
+    </a>
+    {% endif %}
   </div>
 </section>
 
-<section class="cat-strip">
+<section class="cat-nav" aria-label="Browse categories">
   <div class="container">
+    <a href="{{ '/' | relative_url }}" class="cat-chip active">All</a>
     <a href="{{ '/categories/gaming' | relative_url }}" class="cat-chip gaming">🎮 Gaming</a>
     <a href="{{ '/categories/ar-vr' | relative_url }}" class="cat-chip arvr">🥽 AR / VR</a>
     <a href="{{ '/categories/tech' | relative_url }}" class="cat-chip tech">💻 Tech</a>
   </div>
 </section>
 
-<section class="articles-section container" id="articles">
-  <h2 class="section-heading">Latest <span class="gradient-text">Articles</span></h2>
+<section class="articles-section container" id="latest">
+  <div class="section-header">
+    <h2 class="section-heading">Latest <span class="gradient-text">Articles</span></h2>
+    <span class="article-count">{{ site.posts | size }} articles</span>
+  </div>
+
+  {% assign posts = paginator.posts %}
+  {% assign featured_url = site.posts.first.url %}
+
   <div class="card-grid">
-    {% for post in paginator.posts %}
-    <article class="card">
-      <div class="card-img-wrap">
-        {% if post.image %}
-        <img src="{{ post.image }}" alt="{{ post.title }}" loading="lazy" />
-        {% else %}
-        <div class="card-placeholder" aria-hidden="true"></div>
-        {% endif %}
-      </div>
+    {% for post in posts %}
+    {% unless post.url == featured_url and paginator.page == 1 %}
+    <article class="card" data-category="{{ post.categories[0] | slugify }}">
+      <a href="{{ post.url | relative_url }}" class="card-img-link" tabindex="-1" aria-hidden="true">
+        <div class="card-img-wrap">
+          {% if post.image %}
+          <img src="{{ post.image }}" alt="{{ post.title }}" loading="lazy" />
+          {% else %}
+          <div class="card-placeholder" aria-hidden="true"></div>
+          {% endif %}
+          <div class="card-img-overlay" aria-hidden="true"></div>
+        </div>
+      </a>
       <div class="card-body">
         {% if post.categories %}
         <div class="card-cats">
@@ -41,22 +81,27 @@ paginate: 9
         </div>
         {% endif %}
         <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
-        <p>{{ post.description | default: post.excerpt | strip_html | truncate: 120 }}</p>
-        <div class="card-meta">
-          <time datetime="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: "%b %-d, %Y" }}</time>
-          <span>{{ post.content | number_of_words | divided_by: 200 | plus: 1 }} min read</span>
+        <p>{{ post.description | default: post.excerpt | strip_html | truncate: 110 }}</p>
+        <div class="card-footer">
+          <div class="card-meta">
+            <time datetime="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: "%b %-d, %Y" }}</time>
+            <span class="dot">·</span>
+            <span>{{ post.content | number_of_words | divided_by: 200 | plus: 1 }} min read</span>
+          </div>
+          <a href="{{ post.url | relative_url }}" class="card-read-more">Read →</a>
         </div>
       </div>
     </article>
+    {% endunless %}
     {% endfor %}
   </div>
 
   {% if paginator.total_pages > 1 %}
-  <nav class="pagination" aria-label="Pagination">
+  <nav class="pagination" aria-label="Page navigation">
     {% if paginator.previous_page %}
     <a href="{{ paginator.previous_page_path | relative_url }}" class="page-btn">← Newer</a>
     {% endif %}
-    <span class="page-info">{{ paginator.page }} / {{ paginator.total_pages }}</span>
+    <span class="page-info">Page {{ paginator.page }} of {{ paginator.total_pages }}</span>
     {% if paginator.next_page %}
     <a href="{{ paginator.next_page_path | relative_url }}" class="page-btn">Older →</a>
     {% endif %}

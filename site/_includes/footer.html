@@ -1,18 +1,40 @@
-<footer class="site-footer">
-  <div class="footer-wrap">
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-inner">
     <div class="footer-brand">
-      <span class="logo-mark">◈</span>
-      <span>NEXUS<strong>NEWS</strong></span>
-      <p>{{ site.description }}</p>
+      <a href="{{ '/' | relative_url }}" class="logo" aria-label="Nexus News">
+        <svg class="logo-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <polygon points="20,2 38,11 38,29 20,38 2,29 2,11" fill="none" stroke="url(#flg)" stroke-width="2.5"/>
+          <path d="M13 27 L20 13 L27 27" stroke="url(#flg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <line x1="15.5" y1="22" x2="24.5" y2="22" stroke="url(#flg)" stroke-width="2" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="flg" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#8b78ff"/><stop offset="100%" stop-color="#4fd1c5"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="logo-text">NEXUS<strong>NEWS</strong></span>
+      </a>
+      <p>AI-powered daily journalism covering Gaming, AR, VR &amp; Technology.</p>
     </div>
-    <div class="footer-nav">
-      <h4>Explore</h4>
-      <ul>
-        <li><a href="{{ '/categories/gaming' | relative_url }}">Gaming</a></li>
-        <li><a href="{{ '/categories/ar-vr' | relative_url }}">AR / VR</a></li>
-        <li><a href="{{ '/categories/tech' | relative_url }}">Tech</a></li>
-      </ul>
+    <div class="footer-cols">
+      <div>
+        <h4>Categories</h4>
+        <ul>
+          <li><a href="{{ '/categories/gaming' | relative_url }}">Gaming</a></li>
+          <li><a href="{{ '/categories/ar-vr' | relative_url }}">AR / VR</a></li>
+          <li><a href="{{ '/categories/tech' | relative_url }}">Tech</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>About</h4>
+        <ul>
+          <li><a href="#">How It Works</a></li>
+          <li><a href="https://www.pexels.com" target="_blank" rel="noopener">Photos by Pexels</a></li>
+        </ul>
+      </div>
     </div>
-    <p class="footer-copy">© {{ site.time | date: "%Y" }} TechPulse · AI-powered daily tech journalism</p>
+  </div>
+  <div class="footer-bottom">
+    <p>© {{ site.time | date: "%Y" }} Nexus News · AI-generated content · All rights reserved</p>
   </div>
 </footer>

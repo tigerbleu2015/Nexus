@@ -84,28 +84,32 @@ def generate_article(story: dict) -> str:
     image_url = fetch_image(story['title'])
     prompt = (
         "You are a senior tech journalist for Nexus News, covering Gaming, AR, VR, and Technology.\n"
-        "Write a complete SEO-optimized article based on this news story.\n\n"
+        "Write a LONG, detailed, engaging, SEO-optimized article (minimum 800 words) based on this news story.\n"
+        "Write like a professional at IGN or The Verge — insightful, opinionated, with real depth.\n\n"
         f"TITLE: {story['title']}\n"
         f"DESCRIPTION: {story.get('description', '')}\n"
         f"SOURCE: {story.get('source', {}).get('name', 'Unknown')}\n\n"
         "Return ONLY valid Jekyll Markdown with this exact front matter and structure:\n\n"
         "---\n"
         'layout: post\n'
-        'title: "WRITE A COMPELLING SEO TITLE HERE"\n'
+        'title: "WRITE A COMPELLING CLICK-WORTHY SEO TITLE"\n'
         f'date: {today}\n'
         'description: "ONE SENTENCE META DESCRIPTION MAX 155 CHARS"\n'
         'categories: ["Gaming"]\n'
-        'tags: ["tag1", "tag2", "tag3"]\n'
+        'tags: ["tag1", "tag2", "tag3", "tag4"]\n'
         f'image: "{image_url}"\n'
         "---\n\n"
-        "## TL;DR\n\n2-3 sentence summary.\n\n"
-        "## Overview\n\n2-3 paragraphs of analysis.\n\n"
-        "## Key Specifications\n\n"
-        "| Specification | Detail |\n|---|---|\n| Item | Value |\n\n"
-        "## What This Means for Gamers\n\n2 paragraphs.\n\n"
-        "## Industry Reaction\n\n1-2 paragraphs.\n\n"
-        "## Our Take\n\n> Editorial opinion in 2-3 sentences.\n\n"
-        "## Verdict\n\n1-2 paragraph conclusion.\n"
+        "## TL;DR\n\n3-4 sentence punchy executive summary that hooks the reader.\n\n"
+        "## What's Going On\n\n3 full paragraphs of context, background, and what this story actually means. Be specific and detailed.\n\n"
+        "## Breaking It Down\n\n2-3 paragraphs of deep technical or industry analysis. Include real numbers, comparisons, and expert-level insight.\n\n"
+        "## Key Specs & Details\n\n"
+        "| Specification | Detail |\n|---|---|\n"
+        "| [at least 6 rows of real relevant specs or facts] | [values] |\n\n"
+        "## Why Gamers Should Care\n\n2-3 paragraphs on direct real-world impact for gamers and tech enthusiasts. Be specific.\n\n"
+        "## The Bigger Picture\n\n2 paragraphs on industry trends, what this signals for the future, and how it fits into the broader tech landscape.\n\n"
+        "## What The Competition Is Doing\n\n1-2 paragraphs comparing to rivals or alternatives in the market.\n\n"
+        "## Our Take\n\n> A sharp, confident, opinionated 3-4 sentence editorial quote. Don't be neutral — take a stance.\n\n"
+        "## The Verdict\n\n2 paragraphs of strong conclusion with forward-looking predictions. End with something memorable.\n"
     )
 
     headers = {

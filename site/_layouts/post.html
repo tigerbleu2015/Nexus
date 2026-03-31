@@ -1,32 +1,73 @@
 ---
 layout: default
 ---
-<article class="post-page">
-  <header class="post-header container">
-    {% if page.image %}
-    <div class="post-hero-img">
-      <img src="{{ page.image }}" alt="{{ page.title }}" />
-      <p class="photo-credit">Photo via <a href="https://www.pexels.com" target="_blank" rel="noopener">Pexels</a></p>
+<article class="post-page" itemscope itemtype="https://schema.org/Article">
+  {% if page.image %}
+  <div class="post-hero">
+    <img src="{{ page.image }}" alt="{{ page.title }}" loading="eager" itemprop="image" />
+    <div class="post-hero-overlay" aria-hidden="true"></div>
+    <div class="post-hero-content container">
+      {% if page.categories %}
+      <div class="post-cats">
+        {% for cat in page.categories %}<span class="cat-badge cat-{{ cat | slugify }}">{{ cat }}</span>{% endfor %}
+      </div>
+      {% endif %}
+      <h1 class="post-title" itemprop="headline">{{ page.title }}</h1>
+      {% if page.description %}<p class="post-desc" itemprop="description">{{ page.description }}</p>{% endif %}
+      <div class="post-meta">
+        <time datetime="{{ page.date | date: '%Y-%m-%d' }}" itemprop="datePublished">{{ page.date | date: "%B %-d, %Y" }}</time>
+        <span class="sep">·</span>
+        <span>{{ content | number_of_words | divided_by: 200 | plus: 1 }} min read</span>
+        <span class="sep">·</span>
+        <span itemprop="author">{{ site.author }}</span>
+      </div>
     </div>
-    {% endif %}
+    <p class="photo-credit">Photo via <a href="https://www.pexels.com" target="_blank" rel="noopener">Pexels</a></p>
+  </div>
+  {% else %}
+  <header class="post-header container">
     {% if page.categories %}
     <div class="post-cats">
       {% for cat in page.categories %}<span class="cat-badge cat-{{ cat | slugify }}">{{ cat }}</span>{% endfor %}
     </div>
     {% endif %}
-    <h1 class="post-title">{{ page.title }}</h1>
+    <h1 class="post-title" itemprop="headline">{{ page.title }}</h1>
     {% if page.description %}<p class="post-desc">{{ page.description }}</p>{% endif %}
     <div class="post-meta">
       <time datetime="{{ page.date | date: '%Y-%m-%d' }}">{{ page.date | date: "%B %-d, %Y" }}</time>
       <span class="sep">·</span>
       <span>{{ content | number_of_words | divided_by: 200 | plus: 1 }} min read</span>
-      <span class="sep">·</span>
-      <span>{{ site.author }}</span>
     </div>
   </header>
-  <div class="post-body container">
-    {{ content }}
+  {% endif %}
+
+  <div class="post-layout container">
+    <div class="post-body" itemprop="articleBody">
+      {{ content }}
+    </div>
+    <aside class="post-sidebar">
+      <div class="sidebar-widget">
+        <h4>More Articles</h4>
+        <ul>
+          {% for post in site.posts limit:5 %}
+          {% unless post.url == page.url %}
+          <li>
+            <a href="{{ post.url | relative_url }}">{{ post.title | truncate: 55 }}</a>
+            <time>{{ post.date | date: "%b %-d" }}</time>
+          </li>
+          {% endunless %}
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="sidebar-widget sidebar-cats">
+        <h4>Categories</h4>
+        <a href="{{ '/categories/gaming' | relative_url }}" class="cat-chip gaming">🎮 Gaming</a>
+        <a href="{{ '/categories/ar-vr' | relative_url }}" class="cat-chip arvr">🥽 AR / VR</a>
+        <a href="{{ '/categories/tech' | relative_url }}" class="cat-chip tech">💻 Tech</a>
+      </div>
+    </aside>
   </div>
+
   <footer class="post-footer container">
     {% if page.tags %}
     <div class="post-tags">

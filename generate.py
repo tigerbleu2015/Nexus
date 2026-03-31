@@ -16,6 +16,14 @@ OUTPUT_DIR   = os.path.join("site", "_posts")
 
 CATEGORIES = ["gaming", "virtual reality", "augmented reality", "tech hardware", "AI gaming"]
 
+# ── Fetch a relevant image from Unsplash (free, no key needed) ───────────────
+def fetch_image(query: str) -> str:
+    try:
+        safe_query = re.sub(r'[^a-z0-9 ]', '', query.lower()).strip().replace(' ', ',')[:50]
+        return f"https://source.unsplash.com/1200x630/?{safe_query}"
+    except Exception:
+        return "https://source.unsplash.com/1200x630/?gaming,technology"
+
 # ── NewsAPI: fetch top story ───────────────────────────────────────────────────
 def fetch_top_story():
     yesterday = (datetime.date.today() - datetime.timedelta(days=1)).isoformat()
@@ -39,8 +47,9 @@ def fetch_top_story():
 # ── Groq: generate full article ───────────────────────────────────────────────
 def generate_article(story: dict) -> str:
     today = datetime.date.today().isoformat()
+    image_url = fetch_image(story['title'])
     prompt = (
-        "You are a senior tech journalist for TechPulse, covering Gaming, AR, VR, and Technology.\n"
+        "You are a senior tech journalist for Nexus News, covering Gaming, AR, VR, and Technology.\n"
         "Write a complete SEO-optimized article based on this news story.\n\n"
         f"TITLE: {story['title']}\n"
         f"DESCRIPTION: {story.get('description', '')}\n"
@@ -53,6 +62,7 @@ def generate_article(story: dict) -> str:
         'description: "ONE SENTENCE META DESCRIPTION MAX 155 CHARS"\n'
         'categories: ["Gaming"]\n'
         'tags: ["tag1", "tag2", "tag3"]\n'
+        f'image: "{image_url}"\n'
         "---\n\n"
         "## TL;DR\n\n2-3 sentence summary.\n\n"
         "## Overview\n\n2-3 paragraphs of analysis.\n\n"

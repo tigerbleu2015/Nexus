@@ -44,6 +44,7 @@ jobs:
         run: |
           git config user.name "Nexus News Bot"
           git config user.email "bot@nexusnews.ai"
+          git pull --rebase origin main
           git add site/_posts/ site/_data/
           git diff --staged --quiet || git commit -m "feat: article $(date +%Y-%m-%d)"
           git push

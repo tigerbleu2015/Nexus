@@ -11,7 +11,7 @@ import requests
 
 # ── Config ────────────────────────────────────────────────────────────────────
 NEWS_API_KEY = os.getenv("NEWS_API_KEY", "bb47c7769d264e79b455ddc239c5f4e4")
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "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")
 OUTPUT_DIR   = os.path.join("site", "_posts")
 
 CATEGORIES = ["gaming", "virtual reality", "augmented reality", "tech hardware", "AI gaming"]

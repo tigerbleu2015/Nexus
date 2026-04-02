@@ -87,15 +87,16 @@ def fetch_top_story():
 def generate_article(story: dict) -> str:
     today      = datetime.date.today().isoformat()
     image_url  = fetch_image(story["title"])
-    source     = story.get("source", {}).get("name", "Unknown")
-    desc       = story.get("description", "")
+    # Sanitize inputs — strip non-ASCII and truncate to safe lengths
+    title  = story["title"].encode("ascii", "ignore").decode()[:200]
+    desc   = (story.get("description") or "").encode("ascii", "ignore").decode()[:400]
+    source = (story.get("source", {}).get("name") or "Unknown").encode("ascii", "ignore").decode()[:100]
 
     prompt = f"""You are a senior tech journalist at Nexus News covering Gaming, AR, VR, and Technology.
 Write a LONG (minimum 900 words), deeply engaging, SEO-optimized article based on this news story.
 Write like a professional at IGN or The Verge — insightful, opinionated, specific, with real depth.
-Use natural language that reads well and keeps people on the page.
 
-NEWS TITLE: {story["title"]}
+NEWS TITLE: {title}
 NEWS DESCRIPTION: {desc}
 SOURCE: {source}
 
@@ -166,6 +167,8 @@ image: "{image_url}"
     }
     resp = requests.post("https://api.groq.com/openai/v1/chat/completions",
                          json=payload, headers=headers, timeout=90)
+    if not resp.ok:
+        print(f"[Groq Error] {resp.status_code}: {resp.text[:300]}")
     resp.raise_for_status()
     text = resp.json()["choices"][0]["message"]["content"].strip()
     # Strip any markdown code fences the model might add

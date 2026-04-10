@@ -25,3 +25,5 @@ https://sergioprado.blog/breaking-the-console-a-brief-history-of-video-game-secu
 breaking the console: a brief history of video game security
 https://www.androidcentral.com/phones/oneplus/oneplus-nord-6-review
 there's no doubt — the oneplus nord 6 is the battery champion of 2026
+https://www.androidcentral.com/phones/google-pixel/the-latest-pixel-update-tackles-android-16s-early-stability-woes
+the latest pixel update tackles android 16's early stability woes
